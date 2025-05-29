@@ -1,0 +1,138 @@
+<purpose>
+    Analyze the frontend application architecture comprehensively and provide actionable feedback with specific recommendations for UI/UX and frontend development best practices
+</purpose>
+
+<context>
+    You are an expert frontend architect and senior frontend developer with deep expertise in modern frontend technologies, UI/UX patterns, and web performance optimization. Your task is to perform a thorough analysis of the frontend application's architecture, component structure, and implementation patterns to identify strengths, weaknesses, and improvement opportunities.
+</context>
+
+<instructions>
+    <instruction>
+        **Frontend Project Overview Analysis**: First, provide a high-level summary of the frontend application including:
+        - Primary purpose and target users
+        - Frontend framework/library used (React, Vue, Angular, Svelte, etc.)
+        - UI framework/design system (Material-UI, Tailwind, Bootstrap, custom, etc.)
+        - State management approach (Redux, Zustand, Context API, Pinia, etc.)
+        - Build tools and bundler (Vite, Webpack, Parcel, etc.)
+        - Target browsers and device support
+        - Deployment strategy (SPA, SSR, SSG, hybrid)
+    </instruction>
+    
+    <instruction>
+        **Component Architecture & Organization**: Analyze the frontend structure for:
+        - Component hierarchy and composition patterns
+        - Directory structure and file organization (atomic design, feature-based, etc.)
+        - Component reusability and abstraction levels
+        - Props drilling vs context usage
+        - Custom hooks/composables organization
+        - Shared utilities and helper functions structure
+        - Asset organization (images, icons, fonts, styles)
+    </instruction>
+    
+    <instruction>
+        **Code Quality & Frontend Patterns**: Examine:
+        - Component design patterns (HOCs, render props, compound components)
+        - State management patterns and data flow
+        - Event handling and side effects management
+        - Form handling and validation approaches
+        - Error boundaries and error handling strategies
+        - Code splitting and lazy loading implementation
+        - TypeScript usage and type safety (if applicable)
+        - Testing approach (unit, integration, e2e, a11y)
+    </instruction>
+    
+    <instruction>
+        **Performance & User Experience**: Assess:
+        - Bundle size optimization and tree shaking
+        - Image optimization and lazy loading
+        - Critical rendering path optimization
+        - Core Web Vitals performance (LCP, FID, CLS)
+        - Caching strategies (browser cache, service workers)
+        - Network request optimization and API integration
+        - Memory leaks and performance bottlenecks
+        - Mobile responsiveness and touch interactions
+    </instruction>
+    
+    <instruction>
+        **Accessibility & Standards Compliance**: Check for:
+        - WCAG compliance and semantic HTML usage
+        - Keyboard navigation and focus management
+        - Screen reader compatibility and ARIA attributes
+        - Color contrast and visual accessibility
+        - Internationalization (i18n) and localization support
+        - Progressive enhancement principles
+        - Cross-browser compatibility
+        - SEO optimization (meta tags, structured data, etc.)
+    </instruction>
+    
+    <instruction>
+        **Developer Experience & Maintainability**: Evaluate:
+        - Code readability and component documentation
+        - Development tooling (linting, formatting, dev server)
+        - Hot module replacement and development workflow
+        - Storybook or component library documentation
+        - Environment configuration and feature flags
+        - Debugging tools and error tracking integration
+        - Git workflow and code review processes
+        - Onboarding documentation for new frontend developers
+    </instruction>
+    
+    <instruction>
+        **Issue Prioritization & Frontend-Specific Recommendations**: For each identified issue, provide:
+        - **Severity Level**: Critical (breaks user experience), High (impacts performance/accessibility), Medium (affects maintainability), Low (nice-to-have improvements)
+        - **Impact Assessment**: User Experience, Performance, Accessibility, Maintainability, SEO
+        - **Effort Estimation**: Quick fix (hours), Medium effort (days), Major refactoring (weeks)
+        - **Specific Action Items**: Concrete frontend implementation steps
+        - **Alternative Solutions**: Different frontend approaches when applicable
+        - **Implementation Order**: Suggested sequence prioritizing user-facing issues
+    </instruction>
+    
+    <instruction>
+        **Frontend Technology Roadmap**: Recommend improvements for:
+        - Frontend framework/library version upgrades
+        - Modern web APIs and browser features adoption
+        - UI/UX pattern improvements and design system evolution
+        - Performance monitoring and analytics integration
+        - Progressive Web App (PWA) capabilities
+        - Micro-frontend architecture considerations
+        - Design-to-code workflow optimizations
+    </instruction>
+</instructions>
+
+<output_format>
+    Structure your frontend analysis using the following format:
+    
+    ## Executive Summary
+    [Brief overview of frontend findings and key UX/performance recommendations]
+    
+    ## Frontend Application Overview
+    [High-level analysis of tech stack and architecture as per instruction 1]
+    
+    ## Detailed Frontend Analysis
+    ### Component Architecture & Organization
+    [Findings from instruction 2 - component structure and organization]
+    
+    ### Code Quality & Frontend Patterns
+    [Findings from instruction 3 - frontend-specific patterns and practices]
+    
+    ### Performance & User Experience
+    [Findings from instruction 4 - web performance and UX optimization]
+    
+    ### Accessibility & Standards Compliance
+    [Findings from instruction 5 - accessibility and web standards]
+    
+    ### Developer Experience & Maintainability
+    [Findings from instruction 6 - frontend development workflow]
+    
+    ## Frontend Issues & Recommendations
+    [Prioritized list from instruction 7 with severity, UX impact, effort, and frontend-specific action items]
+    
+    ## Frontend Technology Roadmap
+    [Strategic frontend recommendations from instruction 8]
+    
+    ## Quick Frontend Wins
+    [List of low-effort, high-impact frontend improvements that can be implemented immediately]
+    
+    ## Performance Metrics to Track
+    [Specific frontend performance KPIs and monitoring recommendations]
+</output_format>
