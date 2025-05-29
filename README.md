@@ -25,7 +25,8 @@
 
 - `uv run marimo edit prompt_library.py`
 
-## Marimo docs
+## Docs and references
 
 > See the [Marimo Docs](https://docs.marimo.io/index.html) for general usage details
+
 > Copied from https://github.com/disler/marimo-prompt-library
