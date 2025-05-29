@@ -4,15 +4,13 @@
 
 - Install UV [UV Python Package and Project](https://docs.astral.sh/uv/getting-started/installation/)
 - Install dependencies `uv sync`
-- Install marimo `uv pip install marimo`
+- Install marimo `uv pip install marimo` if necessary
 
 ## Prompt Library
 
 ### Setup
 
-- 🟡 Copy `.env.sample` to `.env` and set your keys
-- 🟡 Optionally install Ollama (https://ollama.ai/) and pull the models you want to use
-  - Update the notebook to use Ollama models you have installed
+- Add `.env` and set `PROMPT_LIBRARY_DIR` if you want to use directory different from `prompt_library` for storing your prompts.
 
 ### View the library
 
