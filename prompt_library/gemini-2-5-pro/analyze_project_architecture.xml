@@ -1,0 +1,18 @@
+<purpose>
+    Analyze the project architecture and provide feedback
+</purpose>
+
+<instructions>
+    <instruction>
+        Analyze the project structure, architecture, core technologies and design patterns.
+    </instruction>
+    <instruction>
+        Provide feedback on the architecrute, structure, etc.
+    </instruction>
+    <instruction>
+        Highlight suboptimal parts, patterns, architecture elements of the project.
+    </instruction>
+    <instruction>
+        Provide suggestions for fixing these issues.
+    </instruction>
+</instructions>

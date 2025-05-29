@@ -1,0 +1,87 @@
+<purpose>
+    Generate comprehensive documentation for the {{directory}}
+</purpose>
+
+<instructions>
+    <instruction>
+        Create a README.md file for the {{directory}}
+    </instruction>
+    <instruction>
+        The purpose of this readme is to provide necessary context to LLMs when they work on this directory.
+    </instruction>
+    <instruction>
+        The readme should describe the purpose of the directory, the files and subdirectories inside it, and the relationships between them.
+    </instruction>
+    <instruction>
+        Include a clear directory structure overview using tree format or bullet points.
+    </instruction>
+    <instruction>
+        For each significant file or subdirectory, provide:
+        - Purpose and functionality
+        - Key dependencies or relationships
+        - Usage examples where applicable
+        - Any important configuration or setup requirements
+    </instruction>
+    <instruction>
+        Add a "Getting Started" section if the directory contains executable code or requires setup.
+    </instruction>
+    <instruction>
+        Include installation instructions, prerequisites, and environment setup if needed.
+    </instruction>
+    <instruction>
+        Document any APIs, interfaces, or public methods with clear examples.
+    </instruction>
+    <instruction>
+        Use proper markdown formatting with headers, code blocks, tables, and links where appropriate.
+    </instruction>
+    <instruction>
+        Keep the language clear, concise, and technical but accessible.
+    </instruction>
+    <instruction>
+        Add badges for build status, version, license, etc. if relevant.
+    </instruction>
+    <instruction>
+        Include a table of contents for longer documentation.
+    </instruction>
+    <instruction>
+        Document any environment variables, configuration files, or external dependencies.
+    </instruction>
+    <instruction>
+        Add examples of expected input/output formats where relevant.
+    </instruction>
+    <instruction>
+        Include links to related documentation, external resources, or references.
+    </instruction>
+    <instruction>
+        The readme should be written in a way that is easy to understand and follow.
+    </instruction>
+</instructions>
+
+<output-format>
+    <format>
+        Structure the README.md with the following sections (adapt as needed):
+        1. Title and brief description
+        2. Table of Contents (for longer docs)
+        3. Overview/Purpose
+        4. Directory Structure
+        5. Installation/Setup (if applicable)
+        6. Usage/Getting Started (if applicable)
+        7. File Descriptions
+        8. Configuration (if applicable)
+        9. Examples
+        10. References
+    </format>
+</output-format>
+
+<quality-guidelines>
+    <guideline>Ensure all code examples are properly formatted and tested</guideline>
+    <guideline>Use consistent terminology throughout the documentation</guideline>
+    <guideline>Include version information where relevant</guideline>
+    <guideline>Make the documentation scannable with clear headings and bullet points</guideline>
+    <guideline>Provide context for why certain decisions were made</guideline>
+    <guideline>Include performance considerations or limitations if relevant</guideline>
+</quality-guidelines>
+
+<extra-context>
+    {{extra-context}}
+</extra-context>
