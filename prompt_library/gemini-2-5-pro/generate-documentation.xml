@@ -2,6 +2,10 @@
     Generate comprehensive documentation for the {{directory}}
 </purpose>
 
+<context>
+    You are an expert frontend architect and senior frontend developer with deep expertise in modern frontend technologies, UI/UX patterns, and web performance optimization. Your task is to generate comprehensive documentation for the {{directory}}
+</context>
+
 <instructions>
     <instruction>
         Create a README.md file for the {{directory}}
