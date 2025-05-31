@@ -1,0 +1,182 @@
+<PromptRequest>
+    <Task>
+        <Action>Convert {{library_name}} library documentation into short documentation files.</Action>
+        <Objective>Provide coding agents with an understanding of the {{library_name}} library's API elements and features.</Objective>
+        <InputSource>
+            <LibraryName>{{library_name}} Library</LibraryName>
+            <DocumentationURL>{{url_to_official_library_documentation}}</DocumentationURL>
+        </InputSource>
+        <OutputFormatGuidance>
+            <Instruction>Create short documentation files based on the specified blueprints below. The goal is to capture the essential information an AI coding agent would need to use the library effectively.</Instruction>
+            <GeneralPrinciples>
+                <Principle>Target Audience: Coding agents. Information must be clear, unambiguous, and focused on API usage.</Principle>
+                <Principle>Source of Truth: The official {{library_name}} documentation (refer to DocumentationURL above). All information should be extracted and summarized from here.</Principle>
+                <Principle>Conciseness: Files should be short and to the point. Avoid lengthy prose. Focus on what an agent needs to use the library feature.</Principle>
+                <Principle>Example-Driven: Show, don't just tell. Code examples are paramount.</Principle>
+                <Principle>{{library_name}} Content Only: All content must be about {{library_name}} API elements and features.</Principle>
+                <Principle>Language for Examples: All code examples for {{library_name}} must be in {{primary_language}} (e.g., Python, JavaScript, Java, etc., as appropriate for the {{library_name}}).</Principle>
+            </GeneralPrinciples>
+
+            <FileBlueprints>
+                <FileBlueprint id="{{library_name}}_Feature_Examples_MD">
+                    <FilenamePattern>Preferably a single `{{library_name}}_Feature_Examples.md` file, or alternatively, individual `[feature_name].md` files (e.g., `[example_function_module_or_class_name].md`).</FilenamePattern>
+                    <FileObjective>Provide a detailed, example-driven overview of individual {{library_name}} API elements (functions, classes, modules, etc.). This will be the main resource for an agent to learn how to use a specific part of the library.</FileObjective>
+                    <OverallFileStructure>
+                        <Item>Format: Markdown.</Item>
+                        <Item>Optional: Common {{library_name}}/[primary_language] imports at the beginning if universally applicable (though per-feature imports are more precise and preferred within each feature section).</Item>
+                        <Item>Organize by {{library_name}} feature/module/class/function. Use H2 or H3 headings for each (e.g., `## [example_function_name]`, `## [example_class_name]`).</Item>
+                    </OverallFileStructure>
+                    <FeatureEntryStructure>
+                        <Section name="Feature Heading">
+                            <Detail>Example: `### [example_function_name]` or `### [example_class_name]`</Detail>
+                        </Section>
+                        <Section name="Import Statement / Access">
+                            <Detail>Provide the canonical import path(s) or typical way to access the feature. Adapt syntax based on [primary_language].</Detail>
+                            <ExampleCode language="[primary_language_import_syntax]"><![CDATA[
+// Example: Function/Class import (adjust based on library conventions)
+from [library_package_name] import [example_feature_name];
+
+// Example: Module import
+import [library_package_name].[module_name] as [alias];
+                            ]]></ExampleCode>
+                        </Section>
+                        <Section name="Brief Description">
+                            <Detail>1-3 sentences explaining the feature's purpose and primary use case. Summarized from {{library_name}} docs.</Detail>
+                            <ExampleText><![CDATA[
+**Description:**
+The `[example_feature_name]` [function/class/module] is used to [describe_core_functionality].
+                            ]]></ExampleText>
+                        </Section>
+                        <Section name="Key Syntax / Parameters / Attributes / Methods">
+                            <Detail>
+                                List the most commonly used and important elements.
+                                - For Functions: Key parameters (name, type, default, description) and return value (type, description).
+                                - For Classes: Key constructor parameters, important attributes (name, type, description), and key methods (name, signature, brief description, return value).
+                                - For Modules: Key exported functions/classes (briefly).
+                            </Detail>
+                            <ExampleText_Function><![CDATA[
+**Function Signature:** `[example_function_name](param1: [type], param2: [type] = [default_value]) -> [return_type]`
+
+**Key Parameters:**
+*   `param1`: ([type]) Description of param1.
+*   `param2`: ([type], optional) Description of param2. Default: `[default_value]`.
+
+**Returns:**
+*   (`[return_type]`): Description of what the function returns.
+                            ]]></ExampleText_Function>
+                            <ExampleText_Class><![CDATA[
+**Class Overview:**
+
+**Constructor:** `new [example_class_name](constructor_arg1: [type], ...)`
+*   `constructor_arg1`: ([type]) Description of constructor argument.
+
+**Key Attributes:**
+*   `attribute_name`: ([type]) Description of attribute. (Read-only/Writable if relevant)
+
+**Key Methods:**
+*   `method_name(arg1: [type]) -> [return_type]`: Description of what the method does.
+                            ]]></ExampleText_Class>
+                        </Section>
+                        <Section name="Basic Usage Example(s)">
+                            <Detail>Provide concise, runnable [primary_language] snippets demonstrating the feature's typical usage. If a feature has distinct common patterns, provide a small example for each.</Detail>
+                            <ExampleCode language="[primary_language]"><![CDATA[
+**Basic Usage:**
+```[primary_language_tag_for_markdown]
+// Basic imports for the example
+from [library_package_name] import [example_feature_name_from_lib];
+// ... other necessary imports
+
+// Example for a function
+[result_variable] = [example_feature_name_from_lib]([argument_1], [argument_2_value]);
+print(f"The result is: {[result_variable]}");
+
+// Example for a class
+[instance_variable] = new [example_feature_name_from_lib]([constructor_arg_value]);
+[instance_variable].[method_name]([method_arg_value]);
+[value_variable] = [instance_variable].[attribute_name];
+console.log([value_variable]); // or equivalent print
+```
+                            ]]></ExampleCode>
+                        </Section>
+                        <Section name="Link to Official Documentation">
+                            <Detail>Provide a direct link to the feature's main API or usage page on the {{library_name}} website.</Detail>
+                            <ExampleText><![CDATA[
+**Official Documentation:** [[example_feature_name] Docs]([url_to_specific_feature_docs_on_library_website])
+                            ]]></ExampleText>
+                        </Section>
+                    </FeatureEntryStructure>
+                </FileBlueprint>
+
+                <FileBlueprint id="{{library_name}}_Cheatsheet_MD">
+                    <FilenamePattern>`{{library_name}}_Cheatsheet.md` (single file)</FilenamePattern>
+                    <FileObjective>Provide a very dense, quick-reference guide to {{library_name}} features/API elements, focusing on import/access, minimal [primary_language] syntax, and key parameters/attributes list.</FileObjective>
+                    <OverallFileStructure>
+                        <Item>Format: Markdown.</Item>
+                        <Item>Organize by broad {{library_name}} categories or modules (e.g., `## [module_name_1]`, `## [utility_functions_category]`, `## [data_structures_category]`).</Item>
+                        <Item>Under each category, use H3 or bold text for individual API elements.</Item>
+                    </OverallFileStructure>
+                    <FeatureEntryStructure>
+                        <Section name="API Element Name">
+                            <Detail>Example: `### [example_function_name]` or `**[example_class_name]**`</Detail>
+                        </Section>
+                        <Section name="Ultra-Brief Description">
+                            <Detail>Max 1 sentence. Example: "Function to [primary_action]." or "Class representing [concept]."</Detail>
+                        </Section>
+                        <Section name="Import/Access Snippet">
+                            <Detail>Just the import line(s) or typical access pattern, specific to [primary_language].</Detail>
+                            <ExampleCode language="[primary_language_import_oneline]"><![CDATA[
+`from [library_package_name] import [example_feature_name_from_lib];`
+// or `import [library_package_name].[module_name] as [alias];`
+                            ]]></ExampleCode>
+                        </Section>
+                        <Section name="Core Syntax Snippet ([primary_language])">
+                            <Detail>A minimal, single-line (if possible) [primary_language] example showing a typical call or instantiation.</Detail>
+                            <ExampleCode language="[primary_language_example_oneline]"><![CDATA[
+```[primary_language_tag_for_markdown]
+[result_variable] = [example_feature_name_from_lib]([param_1], [param_2]); // For a function
+[object_variable] = new [example_class_name_from_lib]([constructor_arg]); [object_variable].[method_to_call](); // For a class
+```
+                            ]]></ExampleCode>
+                        </Section>
+                        <Section name="Key Parameters/Attributes/Methods (list)">
+                            <Detail>A comma-separated list of the most essential parameters (for functions) or attributes/methods (for classes).</Detail>
+                            <ExampleText_Function><![CDATA[
+*Key Params:* `param1`, `param2` -> `[return_type]`
+                            ]]></ExampleText_Function>
+                            <ExampleText_Class><![CDATA[
+*Key Elements:* `constructor(arg)`, `attr1`, `method1()`
+                            ]]></ExampleText_Class>
+                        </Section>
+                    </FeatureEntryStructure>
+                     <ExampleFileEntry><![CDATA[
+## [example_module_or_category_name_from_lib]
+
+### [example_function_name_from_lib_1]
+Function to [perform_specific_action_for_function_1].
+`from [library_package] import [example_function_name_from_lib_1];`
+```[primary_language_tag_for_markdown]
+[output_variable] = [example_function_name_from_lib_1]([input_data_variable], [option_flag_param]=True);
+```
+*Key Params:* `[param_name_1]`, `[param_name_2]` -> `[return_type_for_function_1]`
+
+### [example_class_name_from_lib_1]
+Class for managing [type_of_resource_or_data_for_class_1].
+`from [library_package] import [example_class_name_from_lib_1];`
+```[primary_language_tag_for_markdown]
+[manager_object] = new [example_class_name_from_lib_1]([config_settings_variable]); [manager_object].[start_method_name]();
+```
+*Key Elements:* `constructor([config_settings_param])`, `[method_name_1]()`, `[method_name_2]()`, `[attribute_name_1]`
+                    ]]></ExampleFileEntry>
+                </FileBlueprint>
+            </FileBlueprints>
+        </OutputFormatGuidance>
+        <TargetAudience>
+            <AudienceType>Coding Agents</AudienceType>
+            <Examples>
+                <Agent name="Cursor IDE Agent"/>
+                <Agent name="Aider Coding Agent"/>
+                <Agent name="Other similar AI-powered coding assistants"/>
+            </Examples>
+        </TargetAudience>
+    </Task>
+</PromptRequest>

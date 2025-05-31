@@ -1,0 +1,34 @@
+<PromptRequest>
+    <Task>
+        <Action>Convert {{library_name}} documentation into short documentation files.</Action>
+        <Objective>Provide coding agents with an understanding of the {{library_name}} library.</Objective>
+        <InputSource>
+            <LibraryName>{{library_name}}</LibraryName>
+            <DocumentationURL>{{documentation_url}}</DocumentationURL>
+        </InputSource>
+        <OutputFormatGuidance>
+            <Instruction>Create short documentation files.</Instruction>
+            <Analogy>
+                <ReferenceLibrary>Marimo Python Library Examples</ReferenceLibrary>
+                <PurposeOfReference>Understand the desired output file structure and style (conciseness, organization).</PurposeOfReference>
+                <Disclaimer>Use Marimo examples ONLY for understanding structure and style, NOT for content. The content must be about {{library_name}} components.</Disclaimer>
+            </Analogy>
+            <FileContentFocus>
+                <!-- This section details what each small documentation file should ideally contain -->
+                <Item>Component Name</Item>
+                <Item>Brief description of its purpose</Item>
+                <Item>Key props (properties/attributes) and their common usage/types</Item>
+                <Item>Basic usage examples (short code snippets, e.g., React JSX)</Item>
+                <Item>Import statement(s) for the component</Item>
+            </FileContentFocus>
+        </OutputFormatGuidance>
+        <TargetAudience>
+            <AudienceType>Coding Agents</AudienceType>
+            <Examples>
+                <Agent name="Cursor IDE Agent"/>
+                <Agent name="Aider Coding Agent"/>
+                <Agent name="Other similar AI-powered coding assistants"/>
+            </Examples>
+        </TargetAudience>
+    </Task>
+</PromptRequest>
