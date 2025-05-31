@@ -18,6 +18,9 @@ def pull_in_dir_recursively(dir: str) -> dict:
         for item in os.listdir(current_dir):
             item_path = os.path.join(current_dir, item)
             if os.path.isfile(item_path):
+                # Skip .DS_Store files
+                if item == ".DS_Store":
+                    continue
                 relative_path = os.path.relpath(item_path, dir)
                 with open(item_path, "r") as f:
                     result[relative_path] = f.read()
