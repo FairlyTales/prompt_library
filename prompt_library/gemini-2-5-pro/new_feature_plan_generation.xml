@@ -1,6 +1,6 @@
 <prompt_definition>
     <purpose>
-        Generate a concise, actionable implementation plan for a new frontend feature - {{feature_name}}, tailored for use by a Cursor IDE agent.
+        Generate a concise, actionable implementation plan for a new frontend feature - {{feature_name}}, tailored for use by a Cursor IDE agent. Create this plan in a `specs` directory in the root of the project.
     </purpose>
 
     <context>
