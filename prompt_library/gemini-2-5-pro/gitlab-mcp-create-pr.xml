@@ -1,6 +1,6 @@
 <prompt_definition>
     <purpose>
-        Create a new GitLab Merge Request (MR) from a specified source branch ({{source_branch_name}}) to the {{target_branch_name}} branch, with a given title ({{mr_title}}).
+        Create a new GitLab Merge Request (MR) from a specified source branch ({{source_branch_name}}) to the {{target_branch_name}} branch, with a given title ({{mr_title}}), and a structured description including a ticket link, summary, key changes, and an optional screenshot section.
     </purpose>
 
     <context>
@@ -11,10 +11,21 @@
     <!-- {{source_branch_name}}: The name of the branch to merge from. Example: feature/user-authentication -->
     <!-- {{target_branch_name}}: The name of the branch to merge to. Example: master -->
     <!-- {{mr_title}}: The desired title for the Merge Request. Example: Feat: Implement user authentication -->
+    <!-- {{ticket_link}}: The URL to the relevant ticket (e.g., in Notion). Example: https://www.notion.so/my-org/TASK-123 -->
+    <!-- {{is_show_screenshot}}: Boolean (true/false) indicating whether to include the screenshot section. Example: true -->
 
     <instructions>
         <instruction>
             Your primary goal is to create a new Merge Request in GitLab.
+        </instruction>
+        <instruction>
+            **Action**: Get list of projects using the GitLab MCP tool `list_projects`. In this list find the project related to the "name" and/or "description" of the project located in the "package.json" file.
+        </instruction>
+        <instruction>
+            **Action**: Get the project information using the GitLab MCP tool `get_project`. Use the project id to create the merge request.
+        </instruction>
+        <instruction>
+            **Action**: Get the diff between the `{{source_branch_name}}` branch and the `{{target_branch_name}}` branch using the GitLab MCP tool `get_branch_diffs`.
         </instruction>
         <instruction>
             **Action**: Initiate the creation of a new Merge Request using the GitLab MCP tool `create_merge_request`.
@@ -30,10 +41,53 @@
         </instruction>
         <instruction>
             **MR Description**:
-            - Generate a concise description for the Merge Request.
-            - This description should be based on the summary of changes (diff) between the `{{source_branch_name}}` branch and the `{{target_branch_name}}` branch.
-            - Utilize information available through the GitLab MCP or by querying GitLab to understand the commits and changes.
-            - Keep the description short and to the point.
+            The Merge Request description MUST be structured as follows. Populate each section as described. The final description should be a single block of text formatted in Markdown.
+
+            1.  **Ticket Link**:
+                Start the description with the ticket link on its own line, formatted as:
+                `Ticket: {{ticket_link}}`
+
+            2.  **Summary**:
+                Following the ticket link (after two newlines), add a "Summary:" heading.
+                Under this heading, provide a very short and concise summary of the overall changes (1-2 sentences).
+                This summary should be generated based on the diff between the `{{source_branch_name}}` branch and the `{{target_branch_name}}` branch.
+                Utilize information available through the GitLab MCP or by querying GitLab to understand the commits and changes.
+                Example:
+                ```markdown
+                Ticket: {{ticket_link}}
+
+                **Summary:**
+                This MR introduces the new user profile page and updates the authentication flow.
+                ```
+
+            3.  **Key Changes**:
+                Following the Summary (after two newlines), add a "Key Changes:" heading.
+                Under this heading, list the key changes made. Each item in the list MUST be very short and concise, starting with a hyphen.
+                Infer these key changes from the diff and commit messages.
+                Example structure:
+                ```markdown
+                Ticket: {{ticket_link}}
+
+                **Summary:**
+                This MR introduces the new user profile page and updates the authentication flow.
+
+                **Key Changes:**
+                - Added `UserProfile.vue` component.
+                - Modified `authSaga.js` to handle new token expiration.
+                - Updated routes for profile page access.
+                ```
+        </instruction>
+        <instruction condition_variable="is_show_screenshot" condition_value="true">
+            **Screenshot Section (Conditional)**:
+            - If `{{is_show_screenshot}}` is `true`, append the following collapsible screenshot section to the end of the MR description (after the "Key Changes" section, following two newlines):
+            ```markdown
+            <details>
+            <summary>Screenshots</summary>
+
+            </details>
+            ```
+            - If `{{is_show_screenshot}}` is `false`, do NOT add this section.
+            - Note: This section is a placeholder for manually adding screenshots later.
         </instruction>
         <instruction>
             **Tooling**: You MUST use the GitLab MCP for this entire task.
@@ -42,7 +96,7 @@
             **Constraint**: Do NOT use any terminal commands (e.g., `git`) for creating the Merge Request. The entire process must be done via the GitLab MCP.
         </instruction>
         <instruction>
-            Once all fields are correctly populated in the GitLab MCP, submit/create the Merge Request.
+            Once all fields (Title, Source Branch, Target Branch, and the fully structured Description) are correctly populated in the GitLab MCP, submit/create the Merge Request.
         </instruction>
     </instructions>
 
@@ -56,9 +110,11 @@
     </output_format>
 
     <quality_guidelines>
-        <guideline>Accuracy: Ensure the source branch, target branch, title, and description are set exactly as specified or generated according to instructions.</guideline>
-        <guideline>Conciseness: The MR description should be brief and informative.</guideline>
+        <guideline>Accuracy: Ensure the source branch, target branch, title, and description (including its precise structure, formatting, and content for each section) are set exactly as specified or generated according to instructions.</guideline>
+        <guideline>Conciseness: The MR description's "Summary" and "Key Changes" items must be brief and informative.</guideline>
         <guideline>Tool Adherence: Strictly use the GitLab MCP. No terminal commands for MR creation.</guideline>
-        <guideline>Clarity: If user input is ambiguous or missing for required fields (e.g., `{{source_branch_name}}` or `{{mr_title}}` not provided), you should indicate this as a problem rather than proceeding with default/empty values unless explicitly allowed.</guideline>
+        <guideline>Conditional Logic: The screenshot section must only be included if `{{is_show_screenshot}}` is true, and it must be appended correctly.</guideline>
+        <guideline>Markdown Formatting: Ensure the MR description uses correct Markdown for headings, lists, and the details element as specified.</guideline>
+        <guideline>Clarity: If user input is ambiguous or missing for required fields (e.g., `{{source_branch_name}}`, `{{mr_title}}`, `{{ticket_link}}` not provided), you should indicate this as a problem rather than proceeding with default/empty values unless explicitly allowed.</guideline>
     </quality_guidelines>
 </prompt_definition>
