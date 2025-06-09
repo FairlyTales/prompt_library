@@ -98,13 +98,16 @@
         <instruction>
             Once all fields (Title, Source Branch, Target Branch, and the fully structured Description) are correctly populated in the GitLab MCP, submit/create the Merge Request.
         </instruction>
+        <instruction>
+            **Action**: After the merge request is created, get the merge request url using the GitLab MCP and provide it to the user in a CLICKABLE LINK.
+        </instruction>
     </instructions>
 
     <output_format>
         <format>
             The primary output of this task is the successful creation of the Merge Request in GitLab.
             Upon successful creation, please confirm with a message like:
-            "Merge Request '{{mr_title}}' from branch '{{source_branch_name}}' to '{{target_branch_name}}' has been successfully created via the GitLab MCP."
+            "Merge Request '{{mr_title}}' from branch '{{source_branch_name}}' to '{{target_branch_name}}' has been successfully created via the GitLab MCP. Link to the merge request: [merge_request_url]"
             If any errors occur or if you are unable to complete the request, report the issue clearly.
         </format>
     </output_format>
