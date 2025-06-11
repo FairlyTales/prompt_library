@@ -31,6 +31,12 @@
             **Action**: Initiate the creation of a new Merge Request using the GitLab MCP tool `create_merge_request`.
         </instruction>
         <instruction>
+            **Action**: Set `assignee` to `kirill.khnychkin` in the merge request creation.
+        </instruction>
+        <instruction>
+            **Action**: Set `force_remove_source_branch: true` and `squash: true` in the merge request creation.
+        </instruction>
+        <instruction>
             **Source Branch**: Set the source branch for the Merge Request to `{{source_branch_name}}`.
         </instruction>
         <instruction>
