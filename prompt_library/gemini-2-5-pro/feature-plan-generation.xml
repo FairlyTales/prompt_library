@@ -133,6 +133,7 @@
             2.  **Execution Plan Structure:** Is the `Execution Plan` strictly structured into `Phases` and numbered `Steps` (e.g., Step 1.1, 1.2, 2.1)?
             3.  **Rule Compliance:** Does the entire plan adhere to the critical rules listed in the `rule_enforcement_guidelines`?
             4.  **Clarity for Agent:** Is every step in the `Execution Plan` a clear, actionable command that the Cursor agent can execute?
+            5.  You **MUST** work ONLY on the plan. Any other code changes **PROHIBITED**.
             This checklist is for your internal process and should **NOT** appear in the final output.
         </instruction>
     </instructions>
