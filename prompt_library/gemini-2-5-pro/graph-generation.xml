@@ -7,7 +7,6 @@
         <Section name="Overall Graph Structure">
             <Rule description="The entire graph must be enclosed in a root <KnowledgeGraph> tag." />
             <Rule description="The first child must be a project-specific tag, e.g., <ProjectName_Version_Info>, acting as a container for all project-level information.">
-                <SubRule>It must contain a <GraphGenerationMeta> section with generation metadata.</SubRule>
                 <SubRule>It must contain global <keywords>, <terms>, and <annotation> for the project.</SubRule>
                 <SubRule>It must contain all code entity definitions.</SubRule>
             </Rule>
@@ -98,35 +97,32 @@
     <Example name="Example Graph Fragment">
         <![CDATA[
 <KnowledgeGraph>
-  <SourceFrontend_v1_Info VERSION="1.0">
-    <GraphGenerationMeta>
-      <Timestamp>2024-05-15T12:00:00Z</Timestamp>
-    </GraphGenerationMeta>
-    <keywords>frontend:10|react:9|redux:9|typescript:8|payment_requests:7</keywords>
-    <terms>single_page_application|state_management|component_based_ui|side_effects</terms>
-    <annotation>Knowledge graph for the "Source" Frontend application, describing its component architecture, state management, and data flows.</annotation>
-    
-    <!-- Requests List Page Module -->
-    <src_pages_Requests_RequestsList_tsx FILE="src/pages/Requests/RequestsList/RequestsList.tsx" TYPE="FEATURE_MODULE">
-      <keywords>requests_list:9|filtering:8|data_table:8|ui_view:7</keywords>
-      <annotation>Module responsible for displaying the page with the list of payment requests.</annotation>
-      <USES_LIBRARY>React:10|MUI:8</USES_LIBRARY>
+    <SourceFrontend_v1_Info VERSION="1.0">
+        <keywords>frontend:10|react:9|redux:9|typescript:8|payment_requests:7</keywords>
+        <terms>single_page_application|state_management|component_based_ui|side_effects</terms>
+        <annotation>Knowledge graph for the "Source" Frontend application, describing its component architecture, state management, and data flows.</annotation>
+        
+        <!-- Requests List Page Module -->
+        <src_pages_Requests_RequestsList_tsx FILE="src/pages/Requests/RequestsList/RequestsList.tsx" TYPE="FEATURE_MODULE">
+        <keywords>requests_list:9|filtering:8|data_table:8|ui_view:7</keywords>
+        <annotation>Module responsible for displaying the page with the list of payment requests.</annotation>
+        <USES_LIBRARY>React:10|MUI:8</USES_LIBRARY>
 
-      <src_pages_Requests_RequestsList_RequestsList_COMPONENT NAME="RequestsList" TYPE="IS_COMPONENT_OF_MODULE">
-        <keywords>list_component:9|table:8|placeholder:7</keywords>
-        <annotation>The main container component for the requests list page. Manages the rendering of filters and the data table.</annotation>
-        <CrossLinks>
-          <Link TARGET="src_pages_Requests_RequestsFilters_RequestsFilters_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" DESCRIPTION="Displays the filter bar."/>
-          <Link TARGET="src_pages_Requests_RequestsList_components_RequestListTable_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" DESCRIPTION="Displays the data table."/>
-          <Link TARGET="src_pages_Requests_RequestsList_actions_getRequestsList_ACTION" TYPE="DISPATCHES_ACTION" RELEVANCE="10" DESCRIPTION="Initiates the list loading process on mount."/>
-        </CrossLinks>
-      </src_pages_Requests_RequestsList_RequestsList_COMPONENT>
-    </src_pages_Requests_RequestsList_tsx>
+        <src_pages_Requests_RequestsList_RequestsList_COMPONENT NAME="RequestsList" TYPE="IS_COMPONENT_OF_MODULE">
+            <keywords>list_component:9|table:8|placeholder:7</keywords>
+            <annotation>The main container component for the requests list page. Manages the rendering of filters and the data table.</annotation>
+            <CrossLinks>
+            <Link TARGET="src_pages_Requests_RequestsFilters_RequestsFilters_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" DESCRIPTION="Displays the filter bar."/>
+            <Link TARGET="src_pages_Requests_RequestsList_components_RequestListTable_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" DESCRIPTION="Displays the data table."/>
+            <Link TARGET="src_pages_Requests_RequestsList_actions_getRequestsList_ACTION" TYPE="DISPATCHES_ACTION" RELEVANCE="10" DESCRIPTION="Initiates the list loading process on mount."/>
+            </CrossLinks>
+        </src_pages_Requests_RequestsList_RequestsList_COMPONENT>
+        </src_pages_Requests_RequestsList_tsx>
 
-    <!-- ... rest of the example ... -->
+        <!-- ... rest of the example ... -->
 
-  </SourceFrontend_v1_Info>
-</KnowledgeGraph>
+    </SourceFrontend_v1_Info>
+    </KnowledgeGraph>
         ]]>
     </Example>
 </PromptDefinition>
