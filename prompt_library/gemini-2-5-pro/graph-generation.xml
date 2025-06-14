@@ -38,7 +38,7 @@
 
         <Section name="Structure of an Entity Tag">
             <Attribute name="TYPE" requirement="mandatory" description="Describes the entity's role or hierarchical relationship." >
-                <Value for="module">MODULE_TYPE (e.g., FEATURE_MODULE, STATE_LOGIC_MODULE, etc.)</Value>
+                <Value for="module">MODULE_TYPE (e.g., FEATURE_MODULE, STATE_LOGIC_SIDE_EFFECTS_MODULE, STATE_LOGIC_STATE_TRANSFORMATION_MODULE, API_CLIENT_MODULE, etc.)</Value>
                 <Value for="nested_entity">IS_COMPONENT_OF_MODULE, IS_ACTION_OF_MODULE, etc.</Value>
             </Attribute>
             
