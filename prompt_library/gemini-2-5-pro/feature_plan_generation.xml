@@ -113,6 +113,15 @@
         <instruction>
             Use clear headings, bullet points, and concise language. Use code blocks for brief examples (e.g., prop types, state structure snippets) where they add essential clarity.
         </instruction>
+        
+        <instruction name="Final Review Checklist (Internal Thought Process)">
+            Before generating the final markdown output, perform a final self-review. Ask yourself:
+            1.  **Knowledge Graph & Hierarchy:** Have I correctly consulted `knowledge-graph.xml` (if it exists) and respected the source code precedence to inform my architectural decisions?
+            2.  **Execution Plan Structure:** Is the `Execution Plan` strictly structured into `Phases` and numbered `Steps` (e.g., Step 1.1, 1.2, 2.1)?
+            3.  **Rule Compliance:** Does the entire plan adhere to the critical rules listed in the `rule_enforcement_guidelines`?
+            4.  **Clarity for Agent:** Is every step in the `Execution Plan` a clear, actionable command that the Cursor agent can execute?
+            This checklist is for your internal process and should **NOT** appear in the final output.
+        </instruction>
     </instructions>
 
     <output-format>
