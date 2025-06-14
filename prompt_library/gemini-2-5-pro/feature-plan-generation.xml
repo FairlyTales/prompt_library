@@ -181,6 +181,10 @@
     <rule_enforcement_guidelines>
         CRITICAL REMINDERS for rule compliance:
         
+        
+        может быть сюда добавить ссылки на правила курсора или это избыточно? 
+        
+        
         1. **Component Creation**: ALWAYS use @core-ui components instead of basic MUI alternatives
         2. **Redux Patterns**: STRICTLY follow the established actions/reducer/saga/selector patterns (verify against `knowledge-graph.xml` and existing code)
         3. **File Organization**: MAINTAIN directory structure conventions

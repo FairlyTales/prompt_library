@@ -115,6 +115,11 @@
             5.  You **MUST** work ONLY on the plan. Any other code changes **PROHIBITED**.
             This checklist is for your internal process and should not appear in the final output.
         </instruction>
+
+
+        <instruction>
+            Create the plan in a `specs` directory in the root of the project. The plan should be named `{{refactoring_task_name}}-plan.md`.
+        </instruction>
     </instructions>
 
     <output-format>
@@ -134,4 +139,26 @@
             Ensure each section is direct and provides necessary information for the agent.
         </format>
     </output-format>
+    
+    <quality-guidelines>
+        <guideline>The plan must be directly usable by the agent for safe and accurate code modification.</guideline>
+        <guideline>The plan MUST accurately reflect the 'before' state of the code and provide a clear, verifiable path to the 'after' state described in the refactoring goal.</guideline>
+        <guideline>The **Execution Plan** must be broken down into small, sequential steps to minimize risk and allow for verification at each stage.</guideline>
+        <guideline>The plan MUST include considerations for testing and verification to prevent regressions.</guideline>
+        <guideline>Clarity and precision are paramount. Avoid ambiguous instructions.</guideline>
+    </quality-guidelines>
+
+    <rule_enforcement_guidelines>
+        CRITICAL REMINDERS for rule compliance during refactoring:
+        
+        1.  **API Preservation**: When modifying components, do NOT change their public API (props) unless that is the explicit goal of the refactor.
+        2.  **Pattern Transition**: If the goal is to replace a pattern, ensure the new pattern is applied consistently and the old one is fully removed from the targeted scope. The new implementation must integrate cleanly with unchanged parts of the application.
+        3.  **File Organization**: The final file structure must be clean and logical. Any file moves should be accompanied by updates to all relevant import paths across the project.
+        4.  **Testing Adaptation**: Any refactoring of implementation logic MUST be accompanied by a plan to adapt, rewrite, or create tests to validate the new implementation. Existing tests for the old code must not be deleted without a replacement. But the can be temporarily disabled in case the tests are planned to be rewritten in a separate task.
+        5.  **Type Safety**: Preserve or improve type safety. Do not introduce `any` types as a shortcut.
+        6.  **No Dead Code**: Ensure the refactoring plan includes steps to remove all old, now-unused code (components, sagas, actions, etc.).
+        7.  **Performance Neutrality**: A refactor should not negatively impact performance unless it's a trade-off explicitly accepted in the refactoring goal. Performance-critical refactors should include a verification step.
+
+        The final state of the code after the plan is executed must be 100% compliant with project conventions, except for the specific patterns that were the target of the refactoring.
+    </rule_enforcement_guidelines>
 </prompt_definition>
