@@ -90,7 +90,15 @@
         <Section name="Global Sections">
             <Rule description="Each entity is defined only once under its unique tag."/>
             <Rule description="Logical connections are made via <Link> tags within <CrossLinks>."/>
-            <Rule description="An optional <ProjectCrossLinks> section can be added to describe high-level module interactions."/>
+            <Rule description="At the end of the graph, an optional <ProjectCrossLinks TYPE='MODULE_INTERACTIONS_OVERVIEW'> section should be added to summarize high-level interactions between major modules.">
+                <Structure>This section contains an <annotation> and a series of <Link> tags. The TARGET attribute of these links should point to a module-level tag (e.g., a ..._tsx or ..._ts tag), not an individual entity within it.</Structure>
+                <HighLevelLinkTypes>
+                    <LinkType name="FEATURE_USES_SHARED_MODULE" description="A feature module (e.g., from 'src/pages') uses a shared component or utility (e.g., from 'src/components' or 'src/utils')."/>
+                    <LinkType name="MODULE_DEPENDS_ON_API_CLIENT" description="A module (typically a saga module) depends on a generated API client for data fetching."/>
+                    <LinkType name="GLOBAL_SAGA_INTERACTION" description="A global saga (e.g., from 'src/app/sagas') orchestrates actions or data used by multiple features."/>
+                    <LinkType name="ROUTING_TO_FEATURE" description="The main application router directs a specific path to a feature's entry point module."/>
+                </HighLevelLinkTypes>
+            </Rule>
         </Section>
     </RuleSet>
 
@@ -104,25 +112,44 @@
         
         <!-- Requests List Page Module -->
         <src_pages_Requests_RequestsList_tsx FILE="src/pages/Requests/RequestsList/RequestsList.tsx" TYPE="FEATURE_MODULE">
-        <keywords>requests_list:9|filtering:8|data_table:8|ui_view:7</keywords>
-        <annotation>Module responsible for displaying the page with the list of payment requests.</annotation>
-        <USES_LIBRARY>React:10|MUI:8</USES_LIBRARY>
+            <keywords>requests_list:9|filtering:8|data_table:8|ui_view:7</keywords>
+            <annotation>Module responsible for displaying the page with the list of payment requests.</annotation>
+            <USES_LIBRARY>React:10|MUI:8</USES_LIBRARY>
 
-        <src_pages_Requests_RequestsList_RequestsList_COMPONENT NAME="RequestsList" TYPE="IS_COMPONENT_OF_MODULE">
-            <keywords>list_component:9|table:8|placeholder:7</keywords>
-            <annotation>The main container component for the requests list page. Manages the rendering of filters and the data table.</annotation>
-            <CrossLinks>
-            <Link TARGET="src_pages_Requests_RequestsFilters_RequestsFilters_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" DESCRIPTION="Displays the filter bar."/>
-            <Link TARGET="src_pages_Requests_RequestsList_components_RequestListTable_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" DESCRIPTION="Displays the data table."/>
-            <Link TARGET="src_pages_Requests_RequestsList_actions_getRequestsList_ACTION" TYPE="DISPATCHES_ACTION" RELEVANCE="10" DESCRIPTION="Initiates the list loading process on mount."/>
-            </CrossLinks>
-        </src_pages_Requests_RequestsList_RequestsList_COMPONENT>
+            <src_pages_Requests_RequestsList_RequestsList_COMPONENT NAME="RequestsList" TYPE="IS_COMPONENT_OF_MODULE">
+                <keywords>list_component:9|table:8|placeholder:7</keywords>
+                <annotation>The main container component for the requests list page. Manages the rendering of filters and the data table.</annotation>
+                <CrossLinks>
+                    <Link TARGET="src_pages_Requests_RequestsFilters_RequestsFilters_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" DESCRIPTION="Displays the filter bar."/>
+                    <Link TARGET="src_pages_Requests_RequestsList_components_RequestListTable_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" DESCRIPTION="Displays the data table."/>
+                    <Link TARGET="src_pages_Requests_RequestsList_actions_getRequestsList_ACTION" TYPE="DISPATCHES_ACTION" RELEVANCE="10" DESCRIPTION="Initiates the list loading process on mount."/>
+                </CrossLinks>
+            </src_pages_Requests_RequestsList_RequestsList_COMPONENT>
         </src_pages_Requests_RequestsList_tsx>
 
-        <!-- ... rest of the example ... -->
+        <!-- Redux Actions Module for Requests List -->
+        <src_pages_Requests_RequestsList_actions_ts FILE="src/pages/Requests/RequestsList/actions.ts" TYPE="STATE_LOGIC_MODULE">
+            <!-- ... actions defined here ... -->
+        </src_pages_Requests_RequestsList_actions_ts>
 
+        <!-- Sagas Module -->
+        <src_pages_Requests_RequestsList_sagas_ts FILE="src/pages/Requests/RequestsList/sagas.ts" TYPE="SIDE_EFFECTS_MODULE">
+            <!-- ... sagas defined here ... -->
+        </src_pages_Requests_RequestsList_sagas_ts>
+
+        <!-- Auto-generated API Client Module -->
+        <src_generated_source_index_ts FILE="src/generated/source/index.ts" TYPE="API_CLIENT_MODULE">
+            <!-- ... api methods defined here ... -->
+        </src_generated_source_index_ts>
+
+        <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+            <annotation>This section outlines high-level interactions between major features and shared modules.</annotation>
+            <Link TARGET="src_pages_Requests_RequestsList_tsx" TYPE="FEATURE_USES_SHARED_MODULE" DESCRIPTION="The Requests feature uses shared UI components like DataTable and FilterEditor for its UI."/>
+            <Link TARGET="src_pages_Requests_RequestsList_sagas_ts" TYPE="MODULE_DEPENDS_ON_API_CLIENT" DESCRIPTION="Sagas for the Requests feature rely on the auto-generated 'source' API client to fetch data from the backend."/>
+            <Link TARGET="src_app_routes_tsx" TYPE="ROUTING_TO_FEATURE" DESCRIPTION="The main application router maps the '/requests' path to the RequestsList feature module."/>
+        </ProjectCrossLinks>
     </SourceFrontend_v1_Info>
-    </KnowledgeGraph>
+</KnowledgeGraph>
         ]]>
     </Example>
 </PromptDefinition>
