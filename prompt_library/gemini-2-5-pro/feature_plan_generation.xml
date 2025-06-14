@@ -30,7 +30,7 @@
             **First, check for `knowledge-graph.xml`.** If present, use it as your primary map and foundational reference for understanding the codebase structure. However, remember the order of precedence: recent source code patterns are the ultimate truth. Use the graph to discover entities and architecture, but validate against the actual code.
         </instruction>
         <instruction>
-            This plan will be used by a Cursor IDE agent to understand and implement the feature. It should guide the agent effectively. The **Execution Plan (Section 10)** is the most critical part and must be the most detailed.
+            This plan will be used by a Cursor IDE agent to understand and implement the feature. It should guide the agent effectively. The **Execution Plan (Section 9)** is the most critical part and must be the most detailed.
         </instruction>
         <instruction>
             The agent is expected to infer project-specific conventions by consulting the `knowledge-graph.xml` (if present), `.cursor/rules` directory, `README.md`, and existing codebase patterns. The plan should explicitly guide the agent to do so where relevant.
@@ -52,43 +52,39 @@
             <instruction>Note key architectural patterns or design choices the agent should consider or adopt.</instruction>
         </section>
 
-        <section name="3. Task Breakdown">
-            <instruction>Decompose the feature into a high-level task list that provides a strategic overview. Use a markdown table with columns for `Task`, `Description`, and `Dependencies`. This section should be less granular than the Execution Plan.</instruction>
-        </section>
-
-        <section name="4. UI Component Development">
+        <section name="3. UI Component Development">
             <instruction>List new UI components required. For each: Name, Purpose, Props (with types), key internal state, emitted events (if any). Refer to `{{figma_link}}`.</instruction>
             <instruction>List existing components needing modification and describe the changes.</instruction>
             <instruction>Instruct the agent that styling should adhere to project conventions found in `.cursor/rules` directory, `README.md`, or existing codebase patterns.</instruction>
         </section>
 
-        <section name="5. State Management">
+        <section name="4. State Management">
             <instruction>Propose necessary additions or modifications to the application's state (e.g., new store module/slice, context updates).</instruction>
             <instruction>Define the structure of any new state and describe the data flow (fetch, store, update, display).</instruction>
             <instruction>Instruct the agent that the state management approach should align with established project patterns (refer to `knowledge-graph.xml`, `.cursor/rules` directory, `README.md`, existing code).</instruction>
         </section>
 
-        <section name="6. API Integration">
+        <section name="5. API Integration">
             <instruction>List backend API endpoints for interaction (from `{{api_documentation_links}}`).</instruction>
             <instruction>For each endpoint: HTTP method, URL, brief request payload structure, expected success response structure, and critical error handling considerations.</instruction>
             <instruction>Describe where API calls should be made (e.g., service functions, sagas) and any data transformation logic, following patterns shown in `knowledge-graph.xml`.</instruction>
         </section>
 
-        <section name="7. Routing">
+        <section name="6. Routing">
             <instruction>Specify new client-side routes or modifications to existing ones.</instruction>
             <instruction>Detail route parameters, query parameters, or any route guards needed, such as `on_enter` effects seen in `knowledge-graph.xml`.</instruction>
             <instruction>Instruct the agent that routing implementation should follow project conventions (refer to `knowledge-graph.xml`, `.cursor/rules` directory, `README.md`, existing code).</instruction>
         </section>
 
-        <section name="8. Potential Challenges & Considerations">
+        <section name="7. Potential Challenges & Considerations">
             <instruction>Identify potential technical challenges, edge cases, or dependencies the agent should be aware of.</instruction>
         </section>
 
-        <section name="9. New Dependencies">
+        <section name="8. New Dependencies">
             <instruction>List any new third-party libraries or packages anticipated for implementing this feature.</instruction>
         </section>
 
-        <section name="10. Execution Plan">
+        <section name="9. Execution Plan">
             <instruction>
                 **CRITICAL:** This is the most important section. Create a detailed, step-by-step guide for the agent. Structure the plan into logical **Phases** (e.g., Phase 1: Scaffolding, Phase 2: State Management, etc.). Within each Phase, provide a numbered list of granular, sequential **Steps**. Each step must be a concrete, actionable command. Use imperative language (e.g., "Create", "Add", "Modify"). Be highly specific, including file paths, component names, and brief code snippets where necessary.
                 <example>
@@ -107,7 +103,7 @@
             </instruction>
         </section>
 
-        <section name="11. Clarifications & Assumptions">
+        <section name="10. Clarifications & Assumptions">
             <instruction>List any open questions for stakeholders or assumptions made in this plan.</instruction>
         </section>
 
@@ -125,22 +121,21 @@
 
             1.  **Feature Overview & Goals**
             2.  **Proposed Technical Approach**
-            3.  **Task Breakdown** (High-level table format preferred for tasks, description, dependencies)
-            4.  **UI Component Development**
+            3.  **UI Component Development**
                 *   New Components (Name, Purpose, Props, Key State/Events)
                 *   Modifications to Existing Components
                 *   Styling Guidance: *Instruct agent to adhere to project conventions.*
-            5.  **State Management**
+            4.  **State Management**
                 *   New/Modified State Structure & Data Flow
                 *   Guidance: *Instruct agent to align with project's state management patterns.*
-            6.  **API Integration** (Endpoints, Request/Response notes, Error handling points)
-            7.  **Routing**
+            5.  **API Integration** (Endpoints, Request/Response notes, Error handling points)
+            6.  **Routing**
                 *   New/Modified Routes, Params, Guards
                 *   Guidance: *Instruct agent to follow project's routing conventions.*
-            8. **Potential Challenges & Considerations**
-            9. **New Dependencies** (If any)
-            10. **Execution Plan** (Detailed, sequential, and structured into Phases and Steps)
-            11. **Clarifications & Assumptions**
+            7. **Potential Challenges & Considerations**
+            8. **New Dependencies** (If any)
+            9. **Execution Plan** (Detailed, sequential, and structured into Phases and Steps)
+            10. **Clarifications & Assumptions**
 
             Ensure each section is direct and provides necessary information for the agent.
         </format>
