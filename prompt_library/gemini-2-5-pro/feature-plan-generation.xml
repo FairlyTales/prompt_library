@@ -190,8 +190,4 @@
         
         Before finalizing any implementation plan, validate against ALL project rules provided in your context. The implementation must be 100% compliant with established project patterns and conventions.
     </rule_enforcement_guidelines>
-
-    <extra-context>
-        {{extra_context}}
-    </extra-context>
 </prompt_definition>
