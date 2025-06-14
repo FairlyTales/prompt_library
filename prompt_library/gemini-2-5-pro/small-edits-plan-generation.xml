@@ -10,10 +10,11 @@
         - Full codebase context and modification capabilities (including specific line navigation)
         - Terminal automation for validation (linting, type-checking)
         
-        **KNOWLEDGE SOURCES:**
+        **KNOWLEDGE SOURCES (Order of Precedence):**
         1.  **Changes List:** The `{{change_list}}` is the absolute source of truth for the required edits.
         2.  **Source Code:** The agent will use the full source code to apply the changes in their correct context.
-        3.  **Project Rules & Conventions:** All edits, no matter how small, must adhere to the project's established code style and conventions found in `.cursor/rules` directory, `README.md`, etc.
+        3.  **Knowledge Graph (`knowledge-graph.xml`):** If present, use this as a contextual map to understand the relationships of the code being changed. This can help inform the impact of a change (e.g., renaming a widely used action).
+        4.  **Project Rules & Conventions:** All edits, no matter how small, must adhere to the project's established code style and conventions found in `.cursor/rules` directory, `README.md`, etc.
     </context>
 
     <change_list>
@@ -51,7 +52,7 @@
         </section>
 
         <section name="4. Potential Challenges & Considerations">
-            <instruction>Briefly note any potential issues with batching these specific changes. For example, "The rename in `actions.ts` might require manual updates in other files not specified in the list. The agent should be prepared for this." or "No significant risks identified; the changes are isolated."</instruction>
+            <instruction>Briefly note any potential issues with batching these specific changes. If the `knowledge-graph.xml` suggests a change has wider impact than implied by the `change_list`, mention it here. For example, "The rename in `actions.ts` might require manual updates in other files not specified in the list. The agent should be prepared for this." or "No significant risks identified; the changes are isolated."</instruction>
             <instruction>Suggest a verification strategy: "After the plan is executed, a human should quickly spot-check each file location to confirm the change was applied correctly."</instruction>
         </section>
 
@@ -59,7 +60,7 @@
             Before generating the final markdown output, perform a final self-review. Ask yourself:
             1.  **Parsing Accuracy:** Does my `Summary of Changes` table perfectly match every request in the `{{change_list}}`?
             2.  **Execution Clarity:** Is every step in the `Execution Plan` a direct, unambiguous command tied to one of the requested changes?
-            3.  **Safety:** Have I included a final validation step (linting/type-checking)?
+            3.  **Safety:** Have I included a final validation step (linting/type-checking)? Have I considered any context from the knowledge graph?
             This checklist is for your internal process and should not appear in the final output.
         </instruction>
 
@@ -74,7 +75,7 @@
 
             1.  **Task Overview & Goals**
             2.  **Summary of Changes** (Table format)
-            3.  **Execution Plan** (Numbered list of precise steps)
+            3.  **Execution Plan** (Numbered list of precise steps, including final validation)
             4.  **Potential Challenges & Considerations**
 
             Ensure the plan is direct, efficient, and focused only on the requested edits.
@@ -85,6 +86,7 @@
         <guideline>The plan's primary quality is **accuracy**. The `Execution Plan` must perfectly reflect the requests from the `changes_list`.</guideline>
         <guideline>The plan must be **efficient**. Do not include unnecessary boilerplate or sections.</guideline>
         <guideline>The plan must be **safe**. It must include a final validation step to catch any syntax or type errors introduced during the edits.</guideline>
+        <guideline>When available, the `knowledge-graph.xml` should be used to provide context for potential impacts of a change, which should be noted in the 'Challenges' section.</guideline>
     </quality-guidelines>
 
     <rule_enforcement_guidelines>
