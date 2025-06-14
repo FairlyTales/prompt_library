@@ -86,14 +86,14 @@
 
         <section name="9. Execution Plan">
             <instruction>
-                **CRITICAL:** This is the most important section. Create a detailed, step-by-step guide for the agent. Structure the plan into logical **Phases** (e.g., Phase 1: Scaffolding, Phase 2: State Management, etc.). Within each Phase, provide a numbered list of granular, sequential **Steps**. Each step must be a concrete, actionable command. Use imperative language (e.g., "Create", "Add", "Modify"). Be highly specific, including file paths, component names, and brief code snippets where necessary.
-                <example>
+                **CRITICAL:** This is the most important section. Create a detailed, step-by-step guide for the agent. Structure the plan into logical **Phases** (e.g., Phase 1: Scaffolding, Phase 2: State Management, etc.). Within each Phase, provide a numbered list of granular, sequential **Steps**. Each step must be a concrete, actionable command. Use imperative language (e.g., "Create", "Add", "Modify"). Be highly specific, including file paths, component names, and brief code snippets where necessary. Your plan should scale in complexity based on the feature request; a simple change should have a simple plan.
+                <example name="Heavyweight Feature">
                     **Phase 1: Directory and File Structure Setup**
                     *   **Step 1.1:** Create the main feature directory: `src/pages/StateTax/StateTaxEdit`.
                     *   **Step 1.2:** Create component directories: `StateTaxEditRoot`, `StateTaxEditHeader` inside `src/pages/StateTax/StateTaxEdit`.
                     *   **Step 1.3:** For each new component directory, create an `index.ts` file that default exports the component, and a `[ComponentName].tsx` with basic functional component boilerplate.
                     *   **Step 1.4:** Create placeholder Redux files in `src/pages/StateTax/StateTaxEdit`:
-                        *   `actions.ts`: Create with a `reducerName` export (e.g., `'stateTax.edit'`).
+                        *   `actions.ts`: Create with a `reducerName` export (e.g., `'stateTax.edit'`) and one placeholder action.
                         *   `reducer.ts`: Create with an `IStateTaxEditState` interface, a `defaultState`, and an empty `handleActions` call.
                         *   `sagas.ts`: Create a file that exports an empty array `[]`.
                         *   `selector.ts`: Create a root selector that accesses the new state slice (e.g., `(state: State) => state.stateTax.edit`).
@@ -105,6 +105,13 @@
                     *   **Step 2.2:** Implement actions (`getStateTaxEditData`, `setStateTaxEditData`, `resetStateTaxEditState`) in `StateTaxEdit/actions.ts` following project patterns.
                     *   **Step 2.3:** Integrate the new `stateTaxEditReducer` into the main `src/pages/StateTax/reducer.ts`.
                     *   **Step 2.4:** Integrate the new `stateTaxEditSagas` into the main `src/pages/StateTax/sagas.ts`.
+                </example>
+                <example name="Lightweight Modification">
+                    **Phase 1: Component Enhancement**
+                    *   **Step 1.1:** Modify `src/components/MyComponent/MyComponent.tsx`.
+                    *   **Step 1.2:** Import the `useSelector` hook from `react-redux` and the `selectSomeData` selector from the relevant slice.
+                    *   **Step 1.3:** Inside the component, call the selector to get the required data: `const someData = useSelector(selectSomeData);`.
+                    *   **Step 1.4:** Add a new `<p>` tag to the JSX to display the data: `<p>{someData}</p>`.
                 </example>
             </instruction>
         </section>
