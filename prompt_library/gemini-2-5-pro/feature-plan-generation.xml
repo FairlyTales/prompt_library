@@ -136,6 +136,10 @@
             5.  You **MUST** work ONLY on the plan. Any other code changes **PROHIBITED**.
             This checklist is for your internal process and should **NOT** appear in the final output.
         </instruction>
+
+        <instruction>
+            Create the plan in a `specs` directory in the root of the project. The plan should be named `{{feature_name}}-plan.md`.
+        </instruction>
     </instructions>
 
     <output-format>
