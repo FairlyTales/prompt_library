@@ -49,6 +49,13 @@
                     *   **Step 3:** In `'src/components/common/Button.tsx'`, navigate to the component's `sx` prop and change `padding: '8px 16px'` to `padding: '10px 20px'`.
                 </example>
             </instruction>
+            <instruction name="Finalization Phase">
+                **ADD A FINAL PHASE TO THE EXECUTION PLAN TITLED "Finalization: Knowledge Graph Update".** This phase should contain one step instructing the agent to re-run the knowledge graph generation process to ensure it reflects the new code changes. For this phase Aider + Gemini **MUST** be used instead of Cursor due to the complexity of the task. Since the plan is focused on small edits, the knowledge graph is not likely to be affected, so this step is not required.
+                <example>
+                    **Phase X: Finalization: Knowledge Graph Update**
+                    * **Step X.1:** Regenerate the `knowledge-graph.xml` file. In Aider + Gemini use the `knowledge-graph-create.xml` prompt with the full, updated codebase as context to ensure all new components, actions, sagas, and their relationships are accurately reflected.
+                </example>
+            </instruction>
         </section>
 
         <section name="4. Potential Challenges & Considerations">

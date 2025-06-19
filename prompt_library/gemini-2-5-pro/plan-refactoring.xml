@@ -100,6 +100,13 @@
                     *   **Step 3.3:** Delete the old data-related actions (`getUsers`, `setUsers`) from `users/actions.ts` and the corresponding logic from `users/reducer.ts`.
                 </example>
             </instruction>
+            <instruction name="Finalization Phase">
+                **ADD A FINAL PHASE TO THE EXECUTION PLAN TITLED "Finalization: Knowledge Graph Update".** This phase should contain one step instructing the agent to re-run the knowledge graph generation process to ensure it reflects the new code changes. For this phase Aider + Gemini **MUST** be used instead of Cursor due to the complexity of the task.
+                <example>
+                    **Phase X: Finalization: Knowledge Graph Update**
+                    * **Step X.1:** Regenerate the `knowledge-graph.xml` file. In Aider + Gemini use the `knowledge-graph-create.xml` prompt with the full, updated codebase as context to ensure all new components, actions, sagas, and their relationships are accurately reflected.
+                </example>
+            </instruction>
         </section>
 
         <section name="9. Clarifications & Assumptions">
