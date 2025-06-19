@@ -1,0 +1,152 @@
+<PromptDefinition for="Modular XML Knowledge Graph Generation">
+    <Objective>
+        Create a hierarchical and networked knowledge graph for a **single, specified module** of a larger frontend project. The graph must be highly detailed for the files within the given module path and correctly identify and link to external dependencies in other parts of the codebase. The goal is to create one piece of a larger, federated knowledge graph system.
+    </Objective>
+
+    <Inputs>
+        <Input name="module_path" description="The relative path to the root of the module to be analyzed (e.g., 'src/pages/Requests')." value="{{module_path}}" />
+        <Input name="all_source_files" description="A list of all relevant source file paths in the entire repository, used for resolving external dependencies."/>
+    </Inputs>
+
+    <HumanUserInstructions description="This is instructions for human users **ONLY**, it **MUST** be ignored by the Aider and Gemini.">
+        To get data for the `all_source_files` input, run `git ls-files > all_source_files.txt`, then /add `all_source_files.txt` file to Aider context.
+    </HumanUserInstructions>
+
+    <RuleSet>
+        <Section name="Overall Graph Structure">
+            <Rule description="The entire graph must be enclosed in a root <KnowledgeGraph> tag." />
+            <Rule description="The first child must be a module-specific tag, e.g., <ModuleName_Info>, using the directory name from the `module_path`.">
+                <Example>If module_path is 'src/pages/Requests', the tag should be <Requests_Info>.</Example>
+                <SubRule>It must contain global <keywords>, <terms>, and <annotation> for the module being processed.</SubRule>
+                <SubRule>It must ONLY contain entity definitions for files located within the provided `module_path`.</SubRule>
+            </Rule>
+        </Section>
+
+        <Section name="Naming Conventions for Tags and TARGET Attributes">
+            <Rule type="Uniqueness" description="Every concept name used as an XML tag must be globally unique across the entire project."/>
+            <Rule type="Formation" description="Tags should be formed from original names/paths.">
+                <Transformation step="1" action="replace" from="." to="_" />
+                <Transformation step="2" action="replace" from="/" to="_" />
+                <Transformation step="3" action="ensure" value="Tag name begins with a letter or underscore." />
+                <Transformation step="4" action="append_suffix" description="Append a suffix to indicate entity type.">
+                    <SuffixMapping entity="file_module" value="_tsx | _ts" />
+                    <SuffixMapping entity="react_component" value="_COMPONENT" />
+                    <SuffixMapping entity="custom_hook" value="_HOOK" />
+                    <SuffixMapping entity="redux_action" value="_ACTION" />
+                    <SuffixMapping entity="redux_saga" value="_SAGA" />
+                    <SuffixMapping entity="reselect_selector" value="_SELECTOR" />
+                    <SuffixMapping entity="redux_reducer" value="_REDUCER" />
+                    <SuffixMapping entity="typescript_type" value="_TYPE" />
+                </Transformation>
+            </Rule>
+            <Rule type="AttributeMapping" description="Use attributes to map back to original source code.">
+                <Attribute for="modules" name="FILE" description="original/path/to/filename.tsx" />
+                <Attribute for="entities_within_modules" name="NAME" description="originalFunctionNameOrComponentName" />
+            </Rule>
+        </Section>
+
+        <Section name="Structure of an Entity Tag">
+            <Attribute name="TYPE" requirement="mandatory" description="Describes the entity's role or hierarchical relationship." >
+                <Value for="module">MODULE_TYPE (e.g., FEATURE_MODULE, STATE_LOGIC_MODULE, etc.)</Value>
+                <Value for="nested_entity">IS_COMPONENT_OF_MODULE, IS_ACTION_OF_MODULE, etc.</Value>
+            </Attribute>
+            
+            <ChildElements order="specified">
+                <Element name="keywords | terms" format="Pipe-separated, with optional weights (1-10)." />
+                <Element name="annotation" format="Natural language description of purpose." />
+                
+                <EntityTypeSpecific name="_COMPONENT">
+                    <Element name="PROPS" description="Key input properties." />
+                </EntityTypeSpecific>
+                
+                <EntityTypeSpecific name="_ACTION">
+                    <Element name="PAYLOAD" description="Describes the action's payload structure." />
+                </EntityTypeSpecific>
+
+                <EntityTypeSpecific name="_REDUCER">
+                    <Element name="HANDLED_STATE" description="Describes the slice of state managed." />
+                </EntityTypeSpecific>
+                
+                <EntityTypeSpecific name="_HOOK">
+                    <Element name="INPUT_PARAMS" description="The hook's input parameters." />
+                    <Element name="OUTPUT_TYPE" description="The hook's return type." />
+                </EntityTypeSpecific>
+
+                <EntityTypeSpecific name="_SAGA">
+                    <Element name="WATCHES_ACTION" description="The action that triggers this saga." />
+                    <Element name="OUTPUT_EFFECT" description="High-level description of the primary side effect." />
+                </EntityTypeSpecific>
+
+                <Element name="CrossLinks" description="Contains non-hierarchical/logical connections.">
+                    <Structure>Each link: <Link TARGET='Unique_Target_Tag_Name' TYPE='LINK_TYPE' RELEVANCE='1-10' IS_EXTERNAL_LINK='true|false' DESCRIPTION='optional_desc'/></Structure>
+                    <Rule description="The `TARGET` attribute must point to the unique tag name of the target entity. This name is generated using the same Naming Conventions."/>
+                    <Rule description="**CRITICAL**: Set `IS_EXTERNAL_LINK` to 'true' if the TARGET file is outside the current `module_path`. Otherwise, set to 'false' or omit. This is vital for federated graph analysis."/>
+                    <DefinedLinkTypes>
+                        <LinkType name="RENDERS_COMPONENT"/>
+                        <LinkType name="USES_HOOK"/>
+                        <LinkType name="SELECTS_FROM_STORE"/>
+                        <LinkType name="DISPATCHES_ACTION"/>
+                        <LinkType name="TRIGGERS_SAGA"/>
+                        <LinkType name="HANDLES_ACTION"/>
+                        <LinkType name="CALLS_API"/>
+                    </DefinedLinkTypes>
+                </Element>
+            </ChildElements>
+        </Section>
+        
+        <Section name="Global Sections">
+            <Rule description="Each entity is defined only once under its unique tag."/>
+            <Rule description="Logical connections are made via <Link> tags within <CrossLinks>."/>
+            <Rule description="DO NOT include a <ProjectCrossLinks> section in this modular graph. That belongs in the root-level graph."/>
+        </Section>
+
+        <Section name="Scope and Focus">
+            <Rule description="Your primary focus is the module specified in the `module_path` input. Be exhaustive and detailed for all files within this path." />
+            <Rule description="For dependencies outside of `module_path`, you MUST create correct `<Link>` tags pointing to them. Use the `all_source_files` input to find the correct file path for external targets." />
+            <Rule description="You MUST NOT generate full XML definitions for entities outside the `module_path`. Only link to them and mark the link with `IS_EXTERNAL_LINK='true'`."/>
+        </Section>
+
+    </RuleSet>
+
+    <Example name="Example Modular Graph Fragment">
+        <![CDATA[
+        <!-- For a run with module_path = 'src/pages/Requests' -->
+<KnowledgeGraph>
+    <Requests_Info VERSION="1.0">
+        <keywords>requests:10|payment:9|filtering:8|data_table:8</keywords>
+        <annotation>This module handles the viewing, filtering, and management of payment requests.</annotation>
+        
+        <!-- Requests List Page Module (INTERNAL to this module) -->
+        <src_pages_Requests_RequestsList_tsx FILE="src/pages/Requests/RequestsList/RequestsList.tsx" TYPE="FEATURE_MODULE">
+            <keywords>requests_list:9|data_table:8</keywords>
+            <annotation>Module for displaying the list of payment requests.</annotation>
+
+            <src_pages_Requests_RequestsList_RequestsList_COMPONENT NAME="RequestsList" TYPE="IS_COMPONENT_OF_MODULE">
+                <annotation>The main container component for the requests list page.</annotation>
+                <CrossLinks>
+                    <!-- Link to a component WITHIN the same module -->
+                    <Link TARGET="src_pages_Requests_RequestsFilters_RequestsFilters_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" IS_EXTERNAL_LINK="false" />
+                    
+                    <!-- Link to a component OUTSIDE the module -->
+                    <Link TARGET="src_components_NoDataContainer_NoDataContainer_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="8" IS_EXTERNAL_LINK="true" DESCRIPTION="Uses a shared component for loading/empty states." />
+                </CrossLinks>
+            </src_pages_Requests_RequestsList_RequestsList_COMPONENT>
+        </src_pages_Requests_RequestsList_tsx>
+
+        <!-- Requests Filters Module (INTERNAL to this module) -->
+        <src_pages_Requests_RequestsFilters_RequestsFilters_tsx FILE="src/pages/Requests/RequestsFilters/RequestsFilters.tsx" TYPE="FEATURE_MODULE">
+            <keywords>filters:10|ui:8</keywords>
+            <annotation>Component responsible for rendering the filter controls for the Requests page.</annotation>
+            <src_pages_Requests_RequestsFilters_RequestsFilters_COMPONENT NAME="RequestsFilters" TYPE="IS_COMPONENT_OF_MODULE">
+                <CrossLinks>
+                    <!-- Link to an action OUTSIDE the module (in the global app scope) -->
+                    <Link TARGET="src_app_actions_showNotification_ACTION" TYPE="DISPATCHES_ACTION" RELEVANCE="7" IS_EXTERNAL_LINK="true" DESCRIPTION="Shows a global notification for filter errors."/>
+                </CrossLinks>
+            </src_pages_Requests_RequestsFilters_RequestsFilters_COMPONENT>
+        </src_pages_Requests_RequestsFilters_tsx>
+
+    </Requests_Info>
+</KnowledgeGraph>
+        ]]>
+    </Example>
+</PromptDefinition>

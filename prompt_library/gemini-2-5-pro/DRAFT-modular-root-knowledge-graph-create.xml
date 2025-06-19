@@ -1,0 +1,106 @@
+<PromptDefinition for="Root-Level Federated Knowledge Graph Generation">
+    <Objective>
+        Analyze an entire frontend repository to create a single, high-level **root knowledge graph**. This graph must map the major architectural "modules" (feature slices and shared directories) and the dependencies *between* them. It should act as an index or table of contents for the more detailed modular graphs. **Do not include details about individual components, functions, or files.**
+    </Objective>
+    
+    <Inputs>
+        <Input name="directory_structure" description="The complete directory tree of the repository." />
+        <Input name="modular_graph_files" description="The full XML content of all modular `knowledge-graph.xml` files found within the project (e.g., from `src/pages/Invoices/knowledge-graph.xml`, `src/app/knowledge-graph.xml`, etc.). This is a critical source for identifying inter-module dependencies via their `IS_EXTERNAL_LINK='true'` attributes." />
+        <Input name="codebase_context" description="The full source code of the project, used for high-level annotations and identifying public exports from modules." />
+    </Inputs>
+
+    <HumanUserInstructions description="This is instructions for human users **ONLY**, it **MUST** be ignored by the Aider and Gemini.">
+        To get data for the `directory_structure` input, run `tree -a -I 'node_modules|.git|.DS_Store|dist|target*|playwright|tests' > directory_structure.txt`, then /add `directory_structure.txt` file to Aider context.
+        Run `brew install tree` to install the tree command if you don't have it.
+
+        To get data for the `modular_graph_files` input, run `find src -name 'knowledge-graph.xml' -exec cat {} + > aggregated_modular_graphs.xml`, then /add `modular_graph_files.txt` file to Aider context.
+    </HumanUserInstructions>
+
+    <RuleSet>
+        <Section name="Module Definition">
+            <Rule description="A 'module' is a top-level directory within `src/pages/` or a key shared directory like `src/app`, `src/components`, or `src/dictionaries`." />
+            <Rule description="Each identified module MUST be represented by a single, unique `<Module_..._Info>` tag in the root graph."/>
+        </Section>
+
+        <Section name="Naming Conventions">
+            <Rule description="Module tag names must be globally unique and derived from their directory path.">
+                <Example>
+                    `src/pages/Requests` becomes `<Module_Requests_Info>`
+                    `src/app` becomes `<Module_App_Info>`
+                    `src/components` becomes `<Module_Components_Info>`
+                </Example>
+            </Rule>
+        </Section>
+
+        <Section name="Structure of a Module Tag">
+            <Attribute name="TYPE" requirement="mandatory" value="ARCHITECTURAL_MODULE" />
+            <Attribute name="PATH" requirement="mandatory" description="The original path to the module's root directory (e.g., 'src/pages/Requests')." />
+
+            <ChildElements order="specified">
+                <Element name="keywords" format="Pipe-separated, high-level keywords describing the module's domain (e.g., 'invoicing|billing|pdf')." />
+                <Element name="annotation" format="A concise, one-sentence summary of the module's purpose." />
+                <Element name="PUBLIC_EXPORTS" requirement="optional" format="Comma-separated list of key entities the module exposes to the rest of the application (e.g., its root component, key routes, or shared utility functions)." />
+                <Element name="CrossLinks" description="This section contains ONLY high-level, inter-module dependencies.">
+                    <Structure>Each link: <Link FROM='Source_Module_Tag' TO='Target_Module_Tag' TYPE='HIGH_LEVEL_LINK_TYPE' RELEVANCE='1-10' DESCRIPTION='optional_desc'/></Structure>
+                    <Rule description="The `FROM` and `TO` attributes MUST be module-level tags (e.g., `Module_Requests_Info`)." />
+                    <Rule description="Use ONLY the high-level link types defined below."/>
+                    <Rule description="Derive these links by analyzing the `IS_EXTERNAL_LINK='true'` attributes within the provided `modular_graph_files`."/>
+                    <HighLevelLinkTypes>
+                        <LinkType name="FEATURE_USES_SHARED_MODULE" description="A feature module (from 'src/pages') uses a shared component or utility (from 'src/components' or 'src/utils')."/>
+                        <LinkType name="MODULE_DEPENDS_ON_API_CLIENT" description="A module (typically a saga module) depends on a generated API client for data fetching (from 'src/generated')."/>
+                        <LinkType name="GLOBAL_SAGA_INTERACTION" description="A feature module's saga interacts with or is orchestrated by a global saga (from 'src/app/sagas')."/>
+                        <LinkType name="ROUTING_TO_FEATURE" description="The main application router directs a specific path to a feature's entry point module."/>
+                        <LinkType name="FEATURE_DISPATCHES_SHARED_ACTION" description="A feature module dispatches a global or dictionary action (e.g., from `src/app/actions` or `src/dictionaries/actions`)." />
+                    </HighLevelLinkTypes>
+                </Element>
+            </ChildElements>
+        </Section>
+        
+        <Section name="Workflow for AI">
+            <Instruction step="1">Scan the `directory_structure` and identify all major modules (each directory in `src/pages`, plus `src/app`, `src/components`, `src/dictionaries`, `src/generated`).</Instruction>
+            <Instruction step="2">For each module, create its corresponding `<Module_..._Info>` tag.</Instruction>
+            <Instruction step="3">For each module, analyze its `routes.tsx` or top-level `index.ts` to determine its `PUBLIC_EXPORTS`.</Instruction>
+            <Instruction step="4">Scan all provided `modular_graph_files`. For every `<Link ... IS_EXTERNAL_LINK='true' />` you find, create a corresponding high-level `<Link>` in the root graph's `<CrossLinks>` section. Map the specific link type to the appropriate `HIGH_LEVEL_LINK_TYPE`.</Instruction>
+        </Section>
+    </RuleSet>
+
+    <Example name="Example Root Knowledge Graph">
+        <![CDATA[
+<KnowledgeGraph>
+    <MySky_AR_Frontend_v1_Info VERSION="1.0.0">
+        <keywords>accounts_receivable:10|invoicing:9|frontend:9|react:8|redux:8</keywords>
+        <annotation>Root-level knowledge graph for the Accounts Receivable microfrontend, outlining its major modules and their interactions.</annotation>
+
+        <Module_App_Info TYPE="ARCHITECTURAL_MODULE" PATH="src/app">
+            <keywords>global|core|app_setup|root_state</keywords>
+            <annotation>Handles core application logic, global state, routing, and API initialization.</annotation>
+            <PUBLIC_EXPORTS>App, rootReducer, rootSaga, initAPI</PUBLIC_EXPORTS>
+        </Module_App_Info>
+
+        <Module_Components_Info TYPE="ARCHITECTURAL_MODULE" PATH="src/components">
+            <keywords>shared_ui|reusable|controls|layout</keywords>
+            <annotation>Library of shared, reusable React components used across all features.</annotation>
+            <PUBLIC_EXPORTS>FilterEditor, NoDataContainer, MoreButton, RootTabs</PUBLIC_EXPORTS>
+        </Module_Components_Info>
+
+        <Module_Invoices_Info TYPE="ARCHITECTURAL_MODULE" PATH="src/pages/Invoices">
+            <keywords>invoices|billing|pdf_generation|crud</keywords>
+            <annotation>The primary feature for creating, viewing, editing, and managing invoices.</annotation>
+            <PUBLIC_EXPORTS>InvoicesRoot, INVOICES_ROUTE</PUBLIC_EXPORTS>
+        </Module_Invoices_Info>
+
+        <Module_Generated_Info TYPE="ARCHITECTURAL_MODULE" PATH="src/generated">
+            <keywords>api_clients|typescript_types|openapi</keywords>
+            <annotation>Auto-generated API clients and TypeScript types from backend OpenAPI specifications.</annotation>
+        </Module_Generated_Info>
+
+        <CrossLinks>
+            <Link FROM="Module_Invoices_Info" TO="Module_Components_Info" TYPE="FEATURE_USES_SHARED_MODULE" RELEVANCE="9" DESCRIPTION="The Invoices feature uses shared components like FilterEditor and NoDataContainer." />
+            <Link FROM="Module_Invoices_Info" TO="Module_Generated_Info" TYPE="MODULE_DEPENDS_ON_API_CLIENT" RELEVANCE="10" DESCRIPTION="Invoice sagas depend on the 'accountsReceivable' and 'ledger' API clients." />
+            <Link FROM="Module_App_Info" TO="Module_Invoices_Info" TYPE="ROUTING_TO_FEATURE" RELEVANCE="10" DESCRIPTION="The root router delegates all '/invoices' paths to the Invoices module." />
+        </CrossLinks>
+    </MySky_AR_Frontend_v1_Info>
+</KnowledgeGraph>
+        ]]>
+    </Example>
+</PromptDefinition>
