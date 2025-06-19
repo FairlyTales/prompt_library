@@ -1,0 +1,155 @@
+<PromptDefinition for="XML Knowledge Graph Generation">    
+    <Objective>
+        Create a hierarchical and network knowledge graph for a provided frontend project codebase (using a TypeScript/React/Redux/Saga stack) in XML format. The graph must serve as a high-level semantic map for a RAG AI agent, assisting it in navigating and understanding the code's structure, dependencies, data flows, and control flows. The graph should be optimized for GPT models, making implicit relationships (like Redux action-saga chains) explicit and traceable.
+    </Objective>
+
+    <RuleSet>
+        <Section name="Overall Graph Structure">
+            <Rule description="The entire graph must be enclosed in a root <KnowledgeGraph> tag." />
+            <Rule description="The first child must be a project-specific tag, e.g., <ProjectName_Version_Info>, acting as a container for all project-level information.">
+                <SubRule>It must contain global <keywords>, <terms>, and <annotation> for the project.</SubRule>
+                <SubRule>It must contain all code entity definitions.</SubRule>
+            </Rule>
+        </Section>
+
+        <Section name="Naming Conventions for Tags and TARGET Attributes">
+            <Rule type="Uniqueness" description="Every concept name used as an XML tag must be globally unique."/>
+            <Rule type="Formation" description="Tags should be formed from original names/paths.">
+                <Transformation step="1" action="replace" from="." to="_" />
+                <Transformation step="2" action="replace" from=" " to="_" />
+                <Transformation step="3" action="replace" from="/" to="_" />
+                <Transformation step="4" action="ensure" value="Tag name begins with a letter or underscore." />
+                <Transformation step="5" action="append_suffix" description="Append a suffix to indicate entity type.">
+                    <SuffixMapping entity="file_module" value="_tsx | _ts" />
+                    <SuffixMapping entity="react_component" value="_COMPONENT" />
+                    <SuffixMapping entity="custom_hook" value="_HOOK" />
+                    <SuffixMapping entity="redux_action" value="_ACTION" />
+                    <SuffixMapping entity="redux_saga" value="_SAGA" />
+                    <SuffixMapping entity="reselect_selector" value="_SELECTOR" />
+                    <SuffixMapping entity="redux_reducer" value="_REDUCER" />
+                    <SuffixMapping entity="typescript_type" value="_TYPE" />
+                </Transformation>
+            </Rule>
+            <Rule type="AttributeMapping" description="Use attributes to map back to original source code.">
+                <Attribute for="modules" name="FILE" description="original/path/to/filename.tsx" />
+                <Attribute for="entities_within_modules" name="NAME" description="originalFunctionNameOrComponentName" />
+            </Rule>
+        </Section>
+
+        <Section name="Structure of an Entity Tag">
+            <Attribute name="TYPE" requirement="mandatory" description="Describes the entity's role or hierarchical relationship." >
+                <Value for="module">MODULE_TYPE (e.g., FEATURE_MODULE, STATE_LOGIC_SIDE_EFFECTS_MODULE, STATE_LOGIC_STATE_TRANSFORMATION_MODULE, API_CLIENT_MODULE, etc.)</Value>
+                <Value for="nested_entity">IS_COMPONENT_OF_MODULE, IS_ACTION_OF_MODULE, etc.</Value>
+            </Attribute>
+            
+            <ChildElements order="specified">
+                <Element name="keywords | terms" format="Pipe-separated, with optional weights (1-10)." />
+                <Element name="annotation" format="Natural language description of purpose." />
+                
+                <EntityTypeSpecific name="_COMPONENT">
+                    <Element name="PROPS" description="Key input properties." />
+                    <Element name="STATE_HOOKS" description="Lists useState or useReducer hooks." />
+                </EntityTypeSpecific>
+                
+                <EntityTypeSpecific name="_ACTION">
+                    <Element name="PAYLOAD" description="Describes the action's payload structure." />
+                </EntityTypeSpecific>
+
+                <EntityTypeSpecific name="_REDUCER">
+                    <Element name="HANDLED_STATE" description="Describes the slice of state managed." />
+                </EntityTypeSpecific>
+                
+                <EntityTypeSpecific name="_HOOK">
+                    <Element name="INPUT_PARAMS" description="The hook's input parameters." />
+                    <Element name="OUTPUT_TYPE" description="The hook's return type." />
+                </EntityTypeSpecific>
+
+                <EntityTypeSpecific name="_SAGA">
+                    <Element name="WATCHES_ACTION" description="The action that triggers this saga." />
+                    <Element name="OUTPUT_EFFECT" description="High-level description of the primary side effect." />
+                </EntityTypeSpecific>
+
+                <Element name="USES_LIBRARY" requirement="optional" description="Lists key libraries with optional weights." />
+                <Element name="CrossLinks" description="Contains non-hierarchical/logical connections.">
+                    <Structure>Each link: &lt;Link TARGET='Unique_Target_Tag_Name' TYPE='LINK_TYPE' RELEVANCE='1-10' DESCRIPTION='optional_desc'/&gt;</Structure>
+                    <DefinedLinkTypes>
+                        <LinkType name="RENDERS_COMPONENT"/>
+                        <LinkType name="PASSES_PROPS_TO"/>
+                        <LinkType name="USES_HOOK"/>
+                        <LinkType name="SELECTS_FROM_STORE"/>
+                        <LinkType name="DISPATCHES_ACTION"/>
+                        <LinkType name="TRIGGERS_SAGA"/>
+                        <LinkType name="HANDLES_ACTION"/>
+                        <LinkType name="CALLS_API"/>
+                        <LinkType name="NAVIGATES_TO"/>
+                    </DefinedLinkTypes>
+                </Element>
+            </ChildElements>
+        </Section>
+
+        <Section name="Global Sections">
+            <Rule description="Each entity is defined only once under its unique tag."/>
+            <Rule description="Logical connections are made via <Link> tags within <CrossLinks>."/>
+            <Rule description="At the end of the graph, an optional <ProjectCrossLinks TYPE='MODULE_INTERACTIONS_OVERVIEW'> section should be added to summarize high-level interactions between major modules.">
+                <Structure>This section contains an <annotation> and a series of <Link> tags. The TARGET attribute of these links should point to a module-level tag (e.g., a ..._tsx or ..._ts tag), not an individual entity within it.</Structure>
+                <HighLevelLinkTypes>
+                    <LinkType name="FEATURE_USES_SHARED_MODULE" description="A feature module (e.g., from 'src/pages') uses a shared component or utility (e.g., from 'src/components' or 'src/utils')."/>
+                    <LinkType name="MODULE_DEPENDS_ON_API_CLIENT" description="A module (typically a saga module) depends on a generated API client for data fetching."/>
+                    <LinkType name="GLOBAL_SAGA_INTERACTION" description="A global saga (e.g., from 'src/app/sagas') orchestrates actions or data used by multiple features."/>
+                    <LinkType name="ROUTING_TO_FEATURE" description="The main application router directs a specific path to a feature's entry point module."/>
+                </HighLevelLinkTypes>
+            </Rule>
+        </Section>
+    </RuleSet>
+
+    <Example name="Example Graph Fragment">
+        <![CDATA[
+<KnowledgeGraph>
+    <SourceFrontend_v1_Info VERSION="1.0">
+        <keywords>frontend:10|react:9|redux:9|typescript:8|payment_requests:7</keywords>
+        <terms>single_page_application|state_management|component_based_ui|side_effects</terms>
+        <annotation>Knowledge graph for the "Source" Frontend application, describing its component architecture, state management, and data flows.</annotation>
+        
+        <!-- Requests List Page Module -->
+        <src_pages_Requests_RequestsList_tsx FILE="src/pages/Requests/RequestsList/RequestsList.tsx" TYPE="FEATURE_MODULE">
+            <keywords>requests_list:9|filtering:8|data_table:8|ui_view:7</keywords>
+            <annotation>Module responsible for displaying the page with the list of payment requests.</annotation>
+            <USES_LIBRARY>React:10|MUI:8</USES_LIBRARY>
+
+            <src_pages_Requests_RequestsList_RequestsList_COMPONENT NAME="RequestsList" TYPE="IS_COMPONENT_OF_MODULE">
+                <keywords>list_component:9|table:8|placeholder:7</keywords>
+                <annotation>The main container component for the requests list page. Manages the rendering of filters and the data table.</annotation>
+                <CrossLinks>
+                    <Link TARGET="src_pages_Requests_RequestsFilters_RequestsFilters_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" DESCRIPTION="Displays the filter bar."/>
+                    <Link TARGET="src_pages_Requests_RequestsList_components_RequestListTable_COMPONENT" TYPE="RENDERS_COMPONENT" RELEVANCE="9" DESCRIPTION="Displays the data table."/>
+                    <Link TARGET="src_pages_Requests_RequestsList_actions_getRequestsList_ACTION" TYPE="DISPATCHES_ACTION" RELEVANCE="10" DESCRIPTION="Initiates the list loading process on mount."/>
+                </CrossLinks>
+            </src_pages_Requests_RequestsList_RequestsList_COMPONENT>
+        </src_pages_Requests_RequestsList_tsx>
+
+        <!-- Redux Actions Module for Requests List -->
+        <src_pages_Requests_RequestsList_actions_ts FILE="src/pages/Requests/RequestsList/actions.ts" TYPE="STATE_LOGIC_MODULE">
+            <!-- ... actions defined here ... -->
+        </src_pages_Requests_RequestsList_actions_ts>
+
+        <!-- Sagas Module -->
+        <src_pages_Requests_RequestsList_sagas_ts FILE="src/pages/Requests/RequestsList/sagas.ts" TYPE="SIDE_EFFECTS_MODULE">
+            <!-- ... sagas defined here ... -->
+        </src_pages_Requests_RequestsList_sagas_ts>
+
+        <!-- Auto-generated API Client Module -->
+        <src_generated_source_index_ts FILE="src/generated/source/index.ts" TYPE="API_CLIENT_MODULE">
+            <!-- ... api methods defined here ... -->
+        </src_generated_source_index_ts>
+
+        <ProjectCrossLinks TYPE="MODULE_INTERACTIONS_OVERVIEW">
+            <annotation>This section outlines high-level interactions between major features and shared modules.</annotation>
+            <Link TARGET="src_pages_Requests_RequestsList_tsx" TYPE="FEATURE_USES_SHARED_MODULE" DESCRIPTION="The Requests feature uses shared UI components like DataTable and FilterEditor for its UI."/>
+            <Link TARGET="src_pages_Requests_RequestsList_sagas_ts" TYPE="MODULE_DEPENDS_ON_API_CLIENT" DESCRIPTION="Sagas for the Requests feature rely on the auto-generated 'source' API client to fetch data from the backend."/>
+            <Link TARGET="src_app_routes_tsx" TYPE="ROUTING_TO_FEATURE" DESCRIPTION="The main application router maps the '/requests' path to the RequestsList feature module."/>
+        </ProjectCrossLinks>
+    </SourceFrontend_v1_Info>
+</KnowledgeGraph>
+        ]]>
+    </Example>
+</PromptDefinition>
